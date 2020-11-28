@@ -1,19 +1,22 @@
 const mysql = require("mysql");
 const inquirer = require("inquirer");
+require("dotenv").config();
 
 const connection = mysql.createConnection({
     host: "localhost",
     port: 3306,
     user: "root",
-    password: "pladsri1",
+    password: process.env.MYSQL_PASSWORD,
     database: "schemaDB"
 });
 
 connection.connect(function(err) {
     if (err) throw err;
+    console.log("connected as id " + connection.threadId);
+    runQuestion();
 });
 
-function runPrompt(){
+function runQuestion(){
     inquirer.prompt({
         name: "action",
         type: "list",
@@ -35,54 +38,54 @@ function runPrompt(){
 
         ]
     })
-    .then(function (answer){
+    .then(function(answer){
         switch (answer.action) {
             case "View All Employees":
-                allEmployeeSearch();
+                allEmployee();
                 break;
 
             case "View All Employees By Manager":
-                employeeByManagerSearch();
+                employeeByManager();
                 break;
 
             case "Add Employee":
-                addEmployeesSearch();
+                addEmployees();
                 break;
 
             case "Remove Employee":
-                removeEmployeeSearch();
+                removeEmployee();
                 break;
 
             case "Update Employee Role":
-                updateEmployeeRoleSearch();
+                updateEmployeeRole();
                 break;
 
             case "Update Employee Manager":
-                updatEmployeeManagerSearch();
+                updateEmployeeManager();
                 break;
 
             case "View All Role":
-                viewAllRoleSearch();
+                viewAllRole();
                 break;
 
             case "Add Role":
-                addRoleSearch();
+                addRole();
                 break;
 
             case "Remove Role":
-                removeRoleSearch();
+                removeRole();
                 break;
 
             case "Add Department":
-                addDepartmentSearch();
+                addDepartment();
                 break;
 
             case "View All Department":
-                viewAllDepartmentSearch();
+                viewAllDepartment();
                 break;
 
             case "Remove Department":
-                removeDepartmentSearch();
+                removeDepartment();
                 break;
 
             case "exit":
@@ -91,6 +94,11 @@ function runPrompt(){
         }
     });
 }
-function allEmployeeSearch() {
+function allEmployee() {
+    connection.query("SELECT * FROM employee", function(err, res){
+        if(err) throw err; 
+        console.log(res);
+    });
+      }
+
     
-    }
