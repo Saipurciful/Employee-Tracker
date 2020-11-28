@@ -1,20 +1,35 @@
-const mysql = require("mysql");
-const inquirer = require("inquirer");
-require("dotenv").config();
+// Dependencies
+var express = require("express");
+var mysql = require("mysql");
+var inquirer = require("inquirer");
+const consoleTable = require('console.table');
 
-const connection = mysql.createConnection({
+require("dotenv").config();
+// Create express app instance.
+var app = express();
+
+// Set the port of our application
+// process.env.PORT lets the port be set by Heroku
+var PORT = process.env.PORT || 8080;
+
+// MySQL DB Connection Information (remember to change this with our specific credentials)
+var connection = mysql.createConnection({
     host: "localhost",
     port: 3306,
     user: "root",
     password: process.env.MYSQL_PASSWORD,
-    database: "schemaDB"
+    database: "schemaDB",
 });
 
+// Initiate MySQL Connection.
 connection.connect(function(err) {
     if (err) throw err;
-    console.log("connected as id " + connection.threadId);
+    console.log()
+    console.log("EMPLOYEE TRACKER")
+    console.log()
     runQuestion();
 });
+
 
 function runQuestion(){
     inquirer.prompt({
@@ -95,9 +110,10 @@ function runQuestion(){
     });
 }
 function allEmployee() {
-    connection.query("SELECT * FROM employee", function(err, res){
+    connection.query("SELECT * FROM employee INNER JOIN department ON department.id = employee.role_id left JOIN role ON role.id = employee.role_id", function(err, res){
         if(err) throw err; 
-        console.log(res);
+        console.table(res);
+        runQuestion();
     });
       }
 

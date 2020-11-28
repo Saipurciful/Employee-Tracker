@@ -48,3 +48,7 @@ VALUES ("Britney", "Spear", 1, 1),
 ("Ryan", "Gooseling", 4, 3),
 ("Tom", "Cruz", 5, NULL),
 ("Jennifer", "Lopez", 6, NULL);
+
+SELECT * FROM department;
+SELECT * FROM role;
+SELECT * FROM employee;
