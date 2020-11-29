@@ -40,7 +40,8 @@ function runQuestion() {
             choices: [
                 "View All Employees",
                 "View All Employees By Department",
-                "View All Role",
+                "View All Employees By Role",
+                "View All Employees By Manager",
                 "Add Employee",
                 "Remove Employee",
                 "Update Employee Role",
@@ -63,8 +64,12 @@ function runQuestion() {
                     emByDepartment();
                     break;
 
-                case "View All Role":
-                    viewAllRole();
+                case "View All Employees By Role":
+                    emByRole();
+                    break;
+
+                case "View All Employees By Manager":
+                    emByManager();
                     break;
 
                 case "Add Employee":
@@ -117,47 +122,67 @@ function allEm() {
 }
 
 function emByDepartment() {
-    connection.query("SELECT employee.id, employee.first_name, employee.last_name, department.name FROM employee LEFT JOIN role on employee.role_id = role.id LEFT JOIN department department on role.department_id = department.id WHERE department.id;", function (err, res) {
+    connection.query("SELECT employee.id, employee.first_name, employee.last_name, department.name FROM employee LEFT JOIN role ON employee.role_id = role.id LEFT JOIN department ON role.department_id = department.id WHERE department.id;", function (err, res) {
         if (err) throw err;
         console.table(res);
         runQuestion();
     });
 }
-function viewAllRole() {
-    connection.query("SELECT employee.id, employee.first_name, employee.last_name, role.title;", function (err, res) {
+function emByRole() {
+    connection.query("SELECT employee.id, employee.first_name, employee.last_name, role.title FROM employee LEFT JOIN role ON employee.role_id = role.id;", function (err, res) {
         if (err) throw err;
         console.table(res);
         runQuestion();
     });
 }
 
-// function addEm() {
-//     inquirer.prompt({
-//             name: "addEmFirst",
-//             type: "input",
-//             message: "What is employee's first name?",
-//         }, {
-//             name: "addEmLast",
-//             type: "input",
-//             message: "What is employee's last name?",
-//         }, {
-//             name: "addEmRole",
-//             type: "input",
-//             message: "What is employee's role id?"
-//         }, {
-//             name: "addEmManager",
-//             type: "input",
-//             message: "What is employee's manager id?"
+function emByManager() {
+    connection.query("SELECT employee.id, employee.first_name, employee.last_name, CONCAT(e.first_name, ' ' ,e.last_name) AS Manager FROM employee LEFT JOIN employee e ON employee.manager_id = e.id;", function (err, res) {
+        if (err) throw err;
+        console.table(res);
+        runQuestion();
+    });
+}
 
-//         })
+function addEm(){
+    inquirer.prompt([
+        {
+            name: "emFirstName",
+            type: "input",
+            message: "What is employee's first name?"
+        },
+        {
+            name: "emLastName",
+            type: "input",
+            message: "What is employee's last name?",
+        },
+        {
+            name: "emRole",
+            type: "input",
+            message: "What is employee's role ID? (1-6)"
+        },
+        {
+            name: "emManager",
+            type: "input",
+            message: "Who is employee's Manager ID? (1-3)",
+            choices: [
+                "Britney Spear",
+                "Mariah Carrie",
+                "Sam Smith"
+            ]
+        },
+    ])
 
-//         .then(function (answer) {
-//                 addEm(answer.addEmFirst, answer.addEmLast, answer.addEmRole, answer.addEmManager);
-//             },
+.then(function(answer){
+connection.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id)
+VALUES ('${emFirstName}', '${emLastName}', ${emRole}, ${emManager});`, 
 
-//             function addEm() {
-//                 connection.query("INSERT INTO employee SET first_name = ?, last_name = ?, role_id = ?, manager_id = ?", [addEmFirst, addEmLast, addEmRole, addEmManager], function (err, res) {
-//                     if (err) throw err;
-//                     console.table(res);
-//                     runQuestion();
-//                 });
+    function(err, res){
+        if (err) throw err;
+        console.table(res);
+        runQuestion();
+    }
+)
+});
+}
+   
