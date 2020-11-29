@@ -100,8 +100,6 @@ function runQuestion() {
                     addDepartment();
                     break;
 
-
-
                 case "Remove Department":
                     removeDepartment();
                     break;
@@ -147,42 +145,88 @@ function emByManager() {
 function addEm(){
     inquirer.prompt([
         {
-            name: "emFirstName",
+            name: "firstName",
             type: "input",
             message: "What is employee's first name?"
         },
         {
-            name: "emLastName",
+            name: "lastName",
             type: "input",
-            message: "What is employee's last name?",
+            message: "What is employee's last name?"
         },
         {
-            name: "emRole",
+            name: "role",
             type: "input",
             message: "What is employee's role ID? (1-6)"
         },
         {
-            name: "emManager",
+            name: "manager",
             type: "input",
-            message: "Who is employee's Manager ID? (1-3)",
-            choices: [
-                "Britney Spear",
-                "Mariah Carrie",
-                "Sam Smith"
-            ]
+            message: "Who is employee's Manager ID? (1-3)"
+            
         },
     ])
 
-.then(function(answer){
-connection.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id)
-VALUES ('${emFirstName}', '${emLastName}', ${emRole}, ${emManager});`, 
-
-    function(err, res){
-        if (err) throw err;
-        console.table(res);
+    
+    .then(function(answers) {
+        
+        
+        connection.query("INSERT INTO employee SET ?",
+            {
+                first_name: answers.firstName,
+                last_name: answers.lastName,
+                role_id: answers.role,
+                manager_id: answers.manager
+            },
+        function(err,results) {
+            if(err) throw err;
+            console.log("Successfully added " + answers.firstName + " " + answers.lastName );
         runQuestion();
-    }
-)
-});
-}
-   
+        });   
+
+    })}
+
+
+    function removeEm(){
+        inquirer.prompt([
+            {
+                name: "firstName",
+                type: "input",
+                message: "What is employee's first name, would you like to be removed?"
+            },
+            {
+                name: "lastName",
+                type: "input",
+                message: "What is employee's last name, would you like to be removed?"
+            },
+            {
+                name: "role",
+                type: "input",
+                message: "What is employee's role ID? (1-6)"
+            },
+            {
+                name: "manager",
+                type: "input",
+                message: "Who is employee's Manager ID? (1-3)"
+                
+            },
+        ])
+    
+        .then(function(answers) {
+       
+            console.log("Deleting Employee...\n")
+            connection.query("DELETE FROM employee WHERE e.first_name = ? AND e.last_name = ? AND e.role = ? AND e.manager =?"
+            [firstName, lastName, role, manager],
+                // {
+                //     first_name: 'answers.firstName',
+                //     last_name: 'answers.lastName',
+                //     role_id: 'answers.role',
+                //     manager_id: 'answers.manager'
+                // },
+            function(err,res) {
+                if(err) throw err;
+                console.log(res);
+            runQuestion();
+            });   
+    
+        })}
