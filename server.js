@@ -22,99 +22,142 @@ var connection = mysql.createConnection({
 });
 
 // Initiate MySQL Connection.
-connection.connect(function(err) {
+connection.connect(function (err) {
     if (err) throw err;
-    console.log()
-    console.log("EMPLOYEE TRACKER")
-    console.log()
+
+    console.log("Connected as Id" + connection.threadId)
+
     runQuestion();
 });
 
 
-function runQuestion(){
+
+function runQuestion() {
     inquirer.prompt({
-        name: "action",
-        type: "list",
-        message: "What would you like to do?",
-        choices: [
-            "View All Employees",
-            "View All Employees By Manager",
-            "Add Employee",
-            "Remove Employee",
-            "Update Employee Role",
-            "Update Employee Manager",
-            "View All Role",
-            "Add Role",
-            "Remove Role",
-            "Add Department",
-            "View All Department",
-            "Remove Department",
-            "exit",
+            name: "action",
+            type: "list",
+            message: "What would you like to do?",
+            choices: [
+                "View All Employees",
+                "View All Employees By Department",
+                "View All Role",
+                "Add Employee",
+                "Remove Employee",
+                "Update Employee Role",
+                "Update Employee Manager",
+                "Add Role",
+                "Remove Role",
+                "Add Department",
+                "Remove Department",
+                "exit",
 
-        ]
-    })
-    .then(function(answer){
-        switch (answer.action) {
-            case "View All Employees":
-                allEmployee();
-                break;
+            ]
+        })
+        .then(function (answer) {
+            switch (answer.action) {
+                case "View All Employees":
+                    allEm();
+                    break;
 
-            case "View All Employees By Manager":
-                employeeByManager();
-                break;
+                case "View All Employees By Department":
+                    emByDepartment();
+                    break;
 
-            case "Add Employee":
-                addEmployees();
-                break;
+                case "View All Role":
+                    viewAllRole();
+                    break;
 
-            case "Remove Employee":
-                removeEmployee();
-                break;
+                case "Add Employee":
+                    addEm();
+                    break;
 
-            case "Update Employee Role":
-                updateEmployeeRole();
-                break;
+                case "Remove Employee":
+                    removeEm();
+                    break;
 
-            case "Update Employee Manager":
-                updateEmployeeManager();
-                break;
+                case "Update Employee Role":
+                    updateEmRole();
+                    break;
 
-            case "View All Role":
-                viewAllRole();
-                break;
+                case "Update Employee Manager":
+                    updateEmManager();
+                    break;
 
-            case "Add Role":
-                addRole();
-                break;
+                case "Add Role":
+                    addRole();
+                    break;
 
-            case "Remove Role":
-                removeRole();
-                break;
+                case "Remove Role":
+                    removeRole();
+                    break;
 
-            case "Add Department":
-                addDepartment();
-                break;
+                case "Add Department":
+                    addDepartment();
+                    break;
 
-            case "View All Department":
-                viewAllDepartment();
-                break;
 
-            case "Remove Department":
-                removeDepartment();
-                break;
 
-            case "exit":
-                connection.end();
-                break;
-        }
-    });
+                case "Remove Department":
+                    removeDepartment();
+                    break;
+
+                case "exit":
+                    connection.end();
+                    break;
+            }
+        });
 }
-function allEmployee() {
-    connection.query("SELECT * FROM employee INNER JOIN department ON department.id = employee.role_id left JOIN role ON role.id = employee.role_id", function(err, res){
-        if(err) throw err; 
+
+function allEm() {
+    connection.query("SELECT employee.id, employee.first_name, employee.last_name, role.title, role.salary, department.name, CONCAT(e.first_name, ' ' ,e.last_name) AS Manager FROM employee INNER JOIN role on role.id = employee.role_id INNER JOIN department on department.id = role.department_id left join employee e on employee.manager_id = e.id;", function (err, res) {
+        if (err) throw err;
         console.table(res);
         runQuestion();
     });
-      }
+}
 
-    
+function emByDepartment() {
+    connection.query("SELECT employee.id, employee.first_name, employee.last_name, department.name FROM employee LEFT JOIN role on employee.role_id = role.id LEFT JOIN department department on role.department_id = department.id WHERE department.id;", function (err, res) {
+        if (err) throw err;
+        console.table(res);
+        runQuestion();
+    });
+}
+function viewAllRole() {
+    connection.query("SELECT employee.id, employee.first_name, employee.last_name, role.title;", function (err, res) {
+        if (err) throw err;
+        console.table(res);
+        runQuestion();
+    });
+}
+
+// function addEm() {
+//     inquirer.prompt({
+//             name: "addEmFirst",
+//             type: "input",
+//             message: "What is employee's first name?",
+//         }, {
+//             name: "addEmLast",
+//             type: "input",
+//             message: "What is employee's last name?",
+//         }, {
+//             name: "addEmRole",
+//             type: "input",
+//             message: "What is employee's role id?"
+//         }, {
+//             name: "addEmManager",
+//             type: "input",
+//             message: "What is employee's manager id?"
+
+//         })
+
+//         .then(function (answer) {
+//                 addEm(answer.addEmFirst, answer.addEmLast, answer.addEmRole, answer.addEmManager);
+//             },
+
+//             function addEm() {
+//                 connection.query("INSERT INTO employee SET first_name = ?, last_name = ?, role_id = ?, manager_id = ?", [addEmFirst, addEmLast, addEmRole, addEmManager], function (err, res) {
+//                     if (err) throw err;
+//                     console.table(res);
+//                     runQuestion();
+//                 });
