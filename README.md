@@ -38,24 +38,28 @@ So that the user can organize and plan their business.
 
 
 ## Tests Instructions
-* The Command Line Application will prompt multiple choices for the user to choose <br>
-<img src="pictures/1st.png" style="width: 350px;">
+* The Command Line Application will prompt multiple choices for a user to choose <br>
+
+<img src="pictures/1st.png" style="width: 350px;"><br>
 
 
-* The Command Line Application will display the answer in a table form. In the picture below is the example of the user click view all employees.<br>
-<img src="pictures/viewall.png" style="width: 350px;">
+* The Command Line Application will display the output in a table form. <br>In the picture below is the example of the user clicked view all employees.<br>
+
+<img src="pictures/viewall.png" style="width: 350px;"><br>
 
 
-* The user will be able to add more employees, role and department into the table. In the picture below is the example of adding employee (Peter Corp) will appear in id 12. <br>
-<img src="pictures/addem.png" style="width: 350px;">
+* The user will be able to add more employees, role and department into the table. <br>In the picture below is the example of adding employee (Peter Corp) which appeared in id 12.<br>
+
+<img src="pictures/addem.png" style="width: 350px;"><br>
 
 ## Demonstration Video
-![](https://media.giphy.com/media/HkRm0ZmUiV5TcW6s8c/giphy.gif) 
+
+![](https://media.giphy.com/media/HkRm0ZmUiV5TcW6s8c/giphy.gif) <br>
 
 
 
 
-* Link to Demonstration on YouTube: https://www.youtube.com/watch?v=hc-PU9dJhUk
+### Link to Demonstration on YouTube: https://www.youtube.com/watch?v=hc-PU9dJhUk<br>
 
 
 
