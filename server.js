@@ -24,13 +24,9 @@ var connection = mysql.createConnection({
 // Initiate MySQL Connection.
 connection.connect(function (err) {
     if (err) throw err;
-
     console.log("Connected as Id" + connection.threadId)
-
     runQuestion();
 });
-
-
 
 function runQuestion() {
     inquirer.prompt({
@@ -43,13 +39,9 @@ function runQuestion() {
                 "View All Employees By Role",
                 "View All Employees By Manager",
                 "Add Employee",
-                "Remove Employee",
-                "Update Employee Role",
-                "Update Employee Manager",
-                "Add Role",
-                "Remove Role",
                 "Add Department",
-                "Remove Department",
+                "Add Role",
+                "Update Employee Role",
                 "exit",
 
             ]
@@ -76,32 +68,16 @@ function runQuestion() {
                     addEm();
                     break;
 
-                case "Remove Employee":
-                    removeEm();
-                    break;
-
-                case "Update Employee Role":
-                    updateEmRole();
-                    break;
-
-                case "Update Employee Manager":
-                    updateEmManager();
+                case "Add Department":
+                    addDepartment();
                     break;
 
                 case "Add Role":
                     addRole();
                     break;
 
-                case "Remove Role":
-                    removeRole();
-                    break;
-
-                case "Add Department":
-                    addDepartment();
-                    break;
-
-                case "Remove Department":
-                    removeDepartment();
+                case "Update Employee Role":
+                    updateEmRole();
                     break;
 
                 case "exit":
@@ -126,6 +102,7 @@ function emByDepartment() {
         runQuestion();
     });
 }
+
 function emByRole() {
     connection.query("SELECT employee.id, employee.first_name, employee.last_name, role.title FROM employee LEFT JOIN role ON employee.role_id = role.id;", function (err, res) {
         if (err) throw err;
@@ -142,91 +119,118 @@ function emByManager() {
     });
 }
 
-function addEm(){
-    inquirer.prompt([
-        {
-            name: "firstName",
-            type: "input",
-            message: "What is employee's first name?"
-        },
-        {
-            name: "lastName",
-            type: "input",
-            message: "What is employee's last name?"
-        },
-        {
-            name: "role",
-            type: "input",
-            message: "What is employee's role ID? (1-6)"
-        },
-        {
-            name: "manager",
-            type: "input",
-            message: "Who is employee's Manager ID? (1-3)"
-            
-        },
-    ])
-
-    
-    .then(function(answers) {
-        
-        
-        connection.query("INSERT INTO employee SET ?",
-            {
-                first_name: answers.firstName,
-                last_name: answers.lastName,
-                role_id: answers.role,
-                manager_id: answers.manager
-            },
-        function(err,results) {
-            if(err) throw err;
-            console.log("Successfully added " + answers.firstName + " " + answers.lastName );
-        runQuestion();
-        });   
-
-    })}
-
-
-    function removeEm(){
-        inquirer.prompt([
-            {
+function addEm() {
+    inquirer.prompt([{
                 name: "firstName",
                 type: "input",
-                message: "What is employee's first name, would you like to be removed?"
+                message: "What is employee's first name?"
             },
             {
                 name: "lastName",
                 type: "input",
-                message: "What is employee's last name, would you like to be removed?"
+                message: "What is employee's last name?"
             },
             {
                 name: "role",
                 type: "input",
-                message: "What is employee's role ID? (1-6)"
+                message: "What is employee's role ID? "
             },
             {
                 name: "manager",
                 type: "input",
                 message: "Who is employee's Manager ID? (1-3)"
-                
+
             },
         ])
-    
-        .then(function(answers) {
-       
-            console.log("Deleting Employee...\n")
-            connection.query("DELETE FROM employee WHERE e.first_name = ? AND e.last_name = ? AND e.role = ? AND e.manager =?"
-            [firstName, lastName, role, manager],
-                // {
-                //     first_name: 'answers.firstName',
-                //     last_name: 'answers.lastName',
-                //     role_id: 'answers.role',
-                //     manager_id: 'answers.manager'
-                // },
-            function(err,res) {
-                if(err) throw err;
-                console.log(res);
-            runQuestion();
-            });   
-    
-        })}
+        .then(function (answers) {
+            connection.query("INSERT INTO employee SET ?", 
+                {
+                    first_name: answers.firstName,
+                    last_name: answers.lastName,
+                    role_id: answers.role,
+                    manager_id: answers.manager
+                },
+                function (err, results) {
+                    if (err) throw err;
+                    console.table("Successfully added ");
+                    runQuestion();
+                });
+
+        })
+}
+
+function addDepartment() {
+    inquirer.prompt([
+
+            {
+                name: "dement",
+                type: "input",
+                message: "Which department would you like to add?"
+            },
+
+        ])
+        .then(function (answers) {
+
+            connection.query("INSERT INTO department SET ?", 
+                {
+                    name: answers.dement
+                },
+                function (err, results) {
+                    if (err) throw err;
+                    console.table(results + "Successfully added");
+                    runQuestion();
+                });
+
+        })
+}
+function addRole() {
+    inquirer.prompt([
+
+            {
+                name: "aRole",
+                type: "input",
+                message: "Which role would you like to add?"
+            },
+
+        ])
+        .then(function (answers) {
+
+            connection.query("INSERT INTO role SET ?", 
+                {
+                    title: answers.aRole
+                },
+                function (err, results) {
+                    if (err) throw err;
+                    console.table(results + "Successfully added role");
+                    
+                    runQuestion();
+                });
+
+        })
+}
+function updateEmRole() {
+    inquirer
+      .prompt([
+        {
+            name: "updateEm",
+            type: "input",
+            message: "What is the first name of employee would you like to update their role?"
+          
+        },
+  
+        {
+            name: "updateRole",
+            type: "input",
+            message: "What role do you want to update to?",
+          
+        }
+      ])
+      .then(function(answer) {
+        
+        connection.query('UPDATE employee SET role_id=? WHERE first_name= ?',[answer.updateRole, answer.updateEm],function(err, res) {
+          if (err) throw err;
+          console.table(res);
+          connection.end();
+        });
+      });
+  }
