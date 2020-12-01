@@ -49,6 +49,14 @@ So that the user can organize and plan their business.
 * The user will be able to add more employees, role and department into the table. In the picture below is the example of adding employee (Peter Corp) will appear in id 12. <br>
 <img src="pictures/addem.png" style="width: 350px;">
 
+## Demonstration Video
+![](https://media.giphy.com/media/HkRm0ZmUiV5TcW6s8c/giphy.gif) 
+
+
+
+
+* Link to Demonstration on YouTube: https://www.youtube.com/watch?v=hc-PU9dJhUk
+
 
 
 
