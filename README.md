@@ -1,4 +1,4 @@
-# Employee-Tracker
+
 
 # Employee - Tracker [![License](https://img.shields.io/badge/License-MIT%201.0-lightblue.svg)](https://www.boost.org/LICENSE_1_0.txt)
 
@@ -38,7 +38,17 @@ So that the user can organize and plan their business.
 
 
 ## Tests Instructions
-* The Command Line Application will prompt multiple choices for the user to choose in a table form. The user will be able to add more employees, role and department into the table.
+* The Command Line Application will prompt multiple choices for the user to choose <br>
+<img src="pictures/1st.png" style="width: 350px;">
+
+
+* The Command Line Application will display the answer in a table form. In the picture below is the example of the user click view all employees.<br>
+<img src="pictures/viewall.png" style="width: 350px;">
+
+
+* The user will be able to add more employees, role and department into the table. In the picture below is the example of adding employee (Peter Corp) will appear in id 12. <br>
+<img src="pictures/addem.png" style="width: 350px;">
+
 
 
 
